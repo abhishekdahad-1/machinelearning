@@ -385,7 +385,7 @@ namespace Microsoft.ML.Internal.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static uint Rotate(uint x, int r)
+        public static uint Rotate(uint x, int r)
         {
             return (x << r) | (x >> (32 - r));
         }

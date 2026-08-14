@@ -599,11 +599,32 @@ namespace Microsoft.ML.Transforms
             private uint HashRound(uint seed, double value, bool old)
             {
                 ulong v = FloatUtils.GetBits(value == 0 ? 0 : value);
-                var hash = Hashing.MurmurRound(seed, Utils.GetLo(v));
-                var hi = Utils.GetHi(v);
+                var loChunk = Utils.GetLo(v);
+                var hash = seed;
+
+                loChunk *= 0xCC9E2D51;
+                var hiChunk = Utils.GetHi(v);
+                var hi = hiChunk;
+                loChunk = Hashing.Rotate(loChunk, 15);
+                hiChunk *= 0xCC9E2D51;
+                loChunk *= 0x1B873593;
+                hiChunk = Hashing.Rotate(hiChunk, 15);
+
+                hash ^= loChunk;
+                hiChunk *= 0x1B873593;
+                hash = Hashing.Rotate(hash, 13);
+                hash *= 5;
+                hash += 0xE6546B64;
+
                 if (old && hi == 0)
                     return hash;
-                return Hashing.MurmurRound(hash, hi);
+
+                hash ^= hiChunk;
+                hash = Hashing.Rotate(hash, 13);
+                hash *= 5;
+                hash += 0xE6546B64;
+
+                return hash;
             }
         }
 
