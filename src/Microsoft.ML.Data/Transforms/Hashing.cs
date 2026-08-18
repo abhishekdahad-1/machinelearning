@@ -605,13 +605,14 @@ namespace Microsoft.ML.Transforms
                 loChunk *= 0xCC9E2D51;
                 var hiChunk = Utils.GetHi(v);
                 var hi = hiChunk;
-                loChunk = Hashing.Rotate(loChunk, 15);
                 hiChunk *= 0xCC9E2D51;
+                loChunk = Hashing.Rotate(loChunk, 15);
                 loChunk *= 0x1B873593;
                 hiChunk = Hashing.Rotate(hiChunk, 15);
+                hiChunk *= 0x1B873593;
 
                 hash ^= loChunk;
-                hiChunk *= 0x1B873593;
+
                 hash = Hashing.Rotate(hash, 13);
                 hash *= 5;
                 hash += 0xE6546B64;
